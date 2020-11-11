@@ -13,13 +13,15 @@ const Choices = require("inquirer/lib/objects/choices");
 
 const teamMembers = [];
 
+// initial by asking addManager questions 
 function init() {
     addManager().then(addEmployee);;
 }
 
+// generate HTML by using render functions
 function generateHTML() {
     let html = render(teamMembers);
-    console.log(html);
+    // console.log(html);
 
     if (!fs.existsSync(OUTPUT_DIR)){
         fs.mkdirSync(OUTPUT_DIR);
@@ -31,6 +33,7 @@ function generateHTML() {
       });
 }
 
+// adking if the user wants to add more team members
 function addEmployee() {
     return inquirer
     .prompt([
@@ -39,7 +42,6 @@ function addEmployee() {
             message: "Which type of team members would you like to add?",
             name: "addEmployee",
             choices: ["Engineer", "Intern", "I don't want to add anymore members." ]
-            
         }  
     ]).then(function (response) {
         if (response.addEmployee === "Engineer") {
@@ -61,7 +63,7 @@ function addManager() {
                 type: "input",
                 message: "What is the manager's name?",
                 name: "managerName",
-                validate: val => val.length > 1, 
+                validate: val => val.length > 2, 
 
             },
             {
@@ -81,13 +83,19 @@ function addManager() {
                 type: "input",
                 message: "What is the manager's email?",
                 name: "managerEmail",
-                validate: val => val.length > 1, 
+                validate: val => val.length > 2,   
 
             },
             {
                 type: "input",
                 message: "What is the manager's office number?",
-                name: "officeNumber"
+                name: "officeNumber",
+                validate: function(val) {
+                    if (isNaN(val)) {
+                        return "Office number should be a number.";
+                    }                     
+                    return true;
+                }
                 
             },
         ])
@@ -95,7 +103,7 @@ function addManager() {
         .then(function (response) {
             const manager = new Manager(response.managerName, response.managerId, response.managerEmail, response.officeNumber);
             teamMembers.push(manager);
-            console.log(teamMembers);
+            // console.log(teamMembers);
         });
 
 }
@@ -108,7 +116,8 @@ function addEngineer() {
             {
                 type: "input",
                 message: "What is the engineer's name?",
-                name: "engineerName"
+                name: "engineerName",
+                validate: val => val.length > 2, 
 
             },
             {
@@ -128,13 +137,15 @@ function addEngineer() {
             {
                 type: "input",
                 message: "What is the engineer's email?",
-                name: "engineerEmail"
+                name: "engineerEmail",
+                validate: val => val.length > 2, 
 
             },
             {
                 type: "input",
                 message: "What is the engineer's github?",
-                name: "engineerGithub"
+                name: "engineerGithub",
+                validate: val => val.length > 2, 
 
             },
         ])
@@ -142,7 +153,7 @@ function addEngineer() {
         .then(function (response) {
             const engineer = new Engineer(response.engineerName, response.engineerId, response.engineerEmail, response.engineerGithub);
             teamMembers.push(engineer);
-            console.log(teamMembers);
+            // console.log(teamMembers);
         });
 
 }
@@ -154,7 +165,8 @@ function addIntern() {
             {
                 type: "input",
                 message: "What is the intern's name?",
-                name: "internName"
+                name: "internName",
+                validate: val => val.length > 2, 
 
             },
             {
@@ -174,13 +186,15 @@ function addIntern() {
             {
                 type: "input",
                 message: "What is the intern's email?",
-                name: "internEmail"
+                name: "internEmail",
+                validate: val => val.length > 2, 
 
             },
             {
                 type: "input",
                 message: "What is the intern's school?",
-                name: "internSchool"
+                name: "internSchool",
+                validate: val => val.length > 2, 
 
             },
         ])
@@ -188,7 +202,7 @@ function addIntern() {
         .then(function (response) {
             const intern = new Intern(response.internName, response.internId, response.internEmail, response.internSchool);
             teamMembers.push(intern);
-            console.log(teamMembers);
+            // console.log(teamMembers);
         });
 
 }
