@@ -23,6 +23,7 @@ function generateHTML() {
     let html = render(teamMembers);
     // console.log(html);
 
+    // check if output directory exist, if not, create a new directory
     if (!fs.existsSync(OUTPUT_DIR)){
         fs.mkdirSync(OUTPUT_DIR);
     }
